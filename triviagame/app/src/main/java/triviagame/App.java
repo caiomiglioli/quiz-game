@@ -44,18 +44,24 @@ public class App extends Application {
         stageHandler.init(stage);
         socketHandler.init();
 
-        //deletar todas as threads e sockets
-        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent e) {
-                socketHandler.terminate();
-                Platform.exit();
-                System.exit(0);
-            }
-        });
+        // //deletar todas as threads e sockets
+        // stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+        //     @Override
+        //     public void handle(WindowEvent e) {
+        //         socketHandler.terminate();
+        //         Platform.exit();
+        //         System.exit(0);
+        //     }
+        // });
     }
 
     public static void main(String[] args) {
         launch();
+        
+        //deletar todas as threads e sockets
+        Globals.socketHandler.terminate();
+        Platform.exit();
+        System.exit(0);
+
     }
 }
