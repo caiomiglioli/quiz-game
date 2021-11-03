@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="lbl_sua_vez" layoutX="14.0" layoutY="14.0" text="Sua vez!">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_dica" layoutX="16.0" layoutY="143.0" text="Dica">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_resposta" layoutX="16.0" layoutY="206.0" text="Resposta">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_tema" layoutX="19.0" layoutY="73.0" text="Tema">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Separator layoutX="11.0" layoutY="53.0" prefHeight="2.0" prefWidth="322.0" />
+      <TextField fx:id="txtf_tema" layoutX="18.0" layoutY="100.0" prefHeight="25.0" prefWidth="322.0" />
+      <TextField fx:id="txtf_dica" layoutX="18.0" layoutY="173.0" prefHeight="25.0" prefWidth="322.0" />
+      <TextField fx:id="txtf_resposta" layoutX="18.0" layoutY="236.0" prefHeight="25.0" prefWidth="322.0" />
+      <Button fx:id="btn_start" layoutX="67.0" layoutY="302.0" mnemonicParsing="false" onAction="#start_round" prefHeight="25.0" prefWidth="224.0" text="Iniciar rodada">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="0.0" />
+      <Label fx:id="lbl_error_msg" layoutX="69.0" layoutY="277.0" prefHeight="17.0" prefWidth="224.0" text=" " />
+   </children>
+</AnchorPane>
