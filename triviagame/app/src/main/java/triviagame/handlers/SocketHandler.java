@@ -8,10 +8,12 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-import javafx.application.Platform;
-
-// import triviagame.controllers.PageConnect;
-import triviagame.controllers.PageTriviaGame;
+// import javafx.application.Platform;
+import triviagame.controllers.PageChooseTopic;
+import triviagame.controllers.PageConnect;
+// import triviagame.controllers.PageTriviaGame;
+import triviagame.controllers.PageWaitTopic;
+import triviagame.interfaces.HasChatBox;
 
 public class SocketHandler {
 
@@ -35,12 +37,66 @@ public class SocketHandler {
         socket.once("connectReply", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+
+                //antibug
+                String arg = (String) args[0];                
+                for (Object object : args) {
+                    String obj = (String) object;
+                    if(obj.charAt(0) == '{'){
+                        arg = obj;
+                        break;
+                    }
+                }
+                JSONObject response = new JSONObject(arg);
+                //end antibug
+
                 try {
-                    stageHandler.changeScene("/pages/pageConnect.fxml");
+                    stageHandler.changeSceneSynchronous("/pages/pageConnect.fxml");
+                    PageConnect controller = (PageConnect)stageHandler.getSceneController();
+                    // controller.updateTimer(seconds);
+
+                    controller.startTimer();
+
+                    int playerCount = response.getInt("playerCount");
+
+                    controller.updatePlayerCount(playerCount);
+                    controller.updateTimer(response.getInt("countdown"));                      
+
+                    for(int i=1; i<=playerCount; i++){
+                        String key = "player" + Integer.toString(i);
+                        String name = response.getString(key);
+                        controller.printLine(name + " entrou no jogo...");
+                    }
+                    
                     System.out.println("Conectado ao servidor.");
+
                 } catch(Exception e){
                     System.out.println("Exception Error: " + e);
                 }
+            }
+        });
+
+        socket.on("newEvent", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject event = new JSONObject((String)args[0]);
+
+                //get controller
+                HasChatBox controller = (HasChatBox) stageHandler.getSceneController();
+
+                //type join
+                if(event.getString("type").equals("join")){
+                    controller.printLine(event.getString("username") + " entrou no jogo...");
+                    controller.updatePlayerCount(event.getInt("playerCount"));
+
+                }
+
+                System.out.println((String)args[0]);
+
+                // JSONObject reply = new JSONObject((String)args[0]);
+                              
+                // controller.printLine("alo");
+                // controller.getClass().
             }
         });
                
@@ -65,30 +121,24 @@ public class SocketHandler {
     }
 
     public void initGameListeners(){
-
+       
         socket.on("startRound", new Emitter.Listener() {
             @Override
-            public void call(Object... args) {
+            public void call(Object... args) {             
                 JSONObject reply = new JSONObject((String)args[0]);
-                System.out.println("startround call");
+
                 try {
-                    System.out.println("startround trycatch");
                     if(reply.get("playerType").equals("master")){
-                        stageHandler.changeScene("/pages/YourRound.fxml");
+                        stageHandler.changeSceneSynchronous("/pages/pageChooseTopic.fxml");
+                        PageChooseTopic controller = (PageChooseTopic)stageHandler.getSceneController();
+                        // controller.updateTimer(segundos);
+                        controller.startTimer();
 
                     }else{
-                        System.out.println("startround else");
-                        stageHandler.changeSceneSynchronous("/pages/pageTriviaGame.fxml");
-
-                                               
-                        
-                        PageTriviaGame controller = (PageTriviaGame)stageHandler.getSceneController();
-                        System.out.println("controller " + controller.getClass());
-
-                        Platform.runLater(() -> {
-                            controller.updateUI();
-                        });
-                        // controller.prog_timeout.setProgress(0.5);
+                        stageHandler.changeSceneSynchronous("/pages/pageWaitTopic.fxml");
+                        PageWaitTopic controller = (PageWaitTopic)stageHandler.getSceneController();
+                        // controller.updateTimer(segundos);
+                        controller.startTimer();
                     }
                 
                     
@@ -104,8 +154,16 @@ public class SocketHandler {
             }
         });
 
-        socket.emit("gameReady", "xd");
+        socket.on("startGameplay", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                // JSONObject reply = new JSONObject((String)args[0]);
+            }
+        });
 
+
+        //emitir sinal de que o player está pronto'
+        socket.emit("gameReady", "success");
 
         System.out.println("init game listeners");
     }

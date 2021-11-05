@@ -57,10 +57,11 @@ public class StageHandler{
         });
     }
 
+    // public synchronized void changeSceneSynchronous(String resource) throws IOException {
     public void changeSceneSynchronous(String resource) throws IOException {
+        setFinish(false);
 
         Platform.runLater(() -> {
-            setFinish(false);
             // Update UI here.        
             try{
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resource));
@@ -78,7 +79,7 @@ public class StageHandler{
             }
         });
 
-        while(getFinish() == false) {
+        while(getFinish() != true) {
             try{
                 Thread.sleep(1);
             } catch(Exception e){

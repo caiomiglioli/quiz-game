@@ -35,6 +35,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -43,11 +44,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox prefHeight="382.0" prefWidth="288.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="triviagame.controllers.PageConnect">
+<VBox prefHeight="350.0" prefWidth="288.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="triviagame.controllers.PageConnect">
   <children>
       <AnchorPane prefHeight="138.0" prefWidth="228.0">
          <children>
-          <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="163.0" prefWidth="288.0">
+          <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="127.0" prefWidth="288.0">
             <children>
 
                   <Button fx:id="btn_connect" defaultButton="true" layoutX="167.0" layoutY="44.0" mnemonicParsing="false" onAction="#connectToServer" prefHeight="32.0" prefWidth="102.0" text="Conectar">
@@ -60,25 +61,29 @@
                      </font>
                   </Label>
                   <TextField fx:id="txtf_username" layoutX="14.0" layoutY="44.0" prefHeight="32.0" prefWidth="148.0" />
-                  <Label fx:id="lbl_error_msg" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="85.0" prefHeight="56.0" prefWidth="249.0" text=" " textFill="RED">
+                  <Label fx:id="lbl_error_msg" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="81.0" prefHeight="32.0" prefWidth="249.0" text="Aguardando..." wrapText="true">
                      <font>
                         <Font size="15.0" />
                      </font></Label>
-                  <Separator layoutX="-2.0" layoutY="150.0" prefHeight="3.0" prefWidth="288.0" />
+                  <Separator layoutX="-2.0" layoutY="118.0" prefHeight="0.0" prefWidth="288.0" />
             </children>
           </AnchorPane>
          </children>
       </AnchorPane>
-      <Pane prefHeight="219.0" prefWidth="288.0">
+      <Pane prefHeight="210.0" prefWidth="288.0">
          <children>
-            <Label layoutX="20.0" text="Aguardando jogadores...">
+            <Label layoutX="20.0" layoutY="-7.0" text="Aguardando jogadores...">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextFlow fx:id="txt_log" layoutX="20.0" layoutY="25.0" prefHeight="149.0" prefWidth="249.0" style="-fx-background-color: #fff; -fx-border-color: #bbb; -fx-border-radius: 3;" />
-            <ProgressBar fx:id="pgb_timer_connect" layoutX="19.0" layoutY="184.0" prefHeight="17.0" prefWidth="249.0" progress="0.0" />
-            <Label fx:id="lbl_qtde_players" layoutX="245.0" text="0/5" textAlignment="RIGHT">
+            <ScrollPane fx:id="scroll" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="18.0" layoutY="15.0" prefHeight="156.0" prefWidth="249.0" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" vvalue="1.0">
+               <content>
+                  <TextFlow fx:id="txt_log" prefHeight="156.0" prefWidth="233.0" style="-fx-background-color: #fff; -fx-border-color: #bbb; -fx-border-radius: 3;" />
+               </content>
+            </ScrollPane>
+            <ProgressBar fx:id="pgb_timer_connect" layoutX="19.0" layoutY="177.0" prefHeight="17.0" prefWidth="249.0" progress="1" />
+            <Label fx:id="lbl_qtde_players" layoutX="245.0" layoutY="-7.0" text="0/5" textAlignment="RIGHT">
                <font>
                   <Font size="15.0" />
                </font>

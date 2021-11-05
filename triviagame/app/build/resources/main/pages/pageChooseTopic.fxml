@@ -8,14 +8,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="triviagame.controllers.PageChooseTopic">
    <children>
-      <Label fx:id="lbl_sua_vez" layoutX="14.0" layoutY="14.0" text="Sua vez!">
+      <Label fx:id="lbl_sua_vez" layoutX="18.0" layoutY="14.0" text="Sua vez! Escolha o tema!">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <Label fx:id="lbl_dica" layoutX="16.0" layoutY="143.0" text="Dica">
+      <Label fx:id="lbl_dica" layoutX="16.0" layoutY="138.0" text="Dica">
          <font>
             <Font size="20.0" />
          </font>
@@ -30,16 +30,16 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Separator layoutX="11.0" layoutY="53.0" prefHeight="2.0" prefWidth="322.0" />
+      <Separator layoutX="18.0" layoutY="53.0" prefHeight="2.0" prefWidth="322.0" />
       <TextField fx:id="txtf_tema" layoutX="18.0" layoutY="100.0" prefHeight="25.0" prefWidth="322.0" />
-      <TextField fx:id="txtf_dica" layoutX="18.0" layoutY="173.0" prefHeight="25.0" prefWidth="322.0" />
+      <TextField fx:id="txtf_dica" layoutX="18.0" layoutY="168.0" prefHeight="25.0" prefWidth="322.0" />
       <TextField fx:id="txtf_resposta" layoutX="18.0" layoutY="236.0" prefHeight="25.0" prefWidth="322.0" />
-      <Button fx:id="btn_start" layoutX="67.0" layoutY="302.0" mnemonicParsing="false" onAction="#start_round" prefHeight="25.0" prefWidth="224.0" text="Iniciar rodada">
+      <Button fx:id="btn_start" defaultButton="true" layoutX="67.0" layoutY="286.0" mnemonicParsing="false" onAction="#startRound" prefHeight="25.0" prefWidth="224.0" text="Iniciar Rodada">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="0.0" />
+      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="1" />
       <Label fx:id="lbl_error_msg" layoutX="69.0" layoutY="277.0" prefHeight="17.0" prefWidth="224.0" text=" " />
    </children>
 </AnchorPane>

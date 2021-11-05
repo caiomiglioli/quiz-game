@@ -1,5 +1,8 @@
 package triviagame.controllers;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.json.JSONObject;
 
 import io.socket.client.Socket;
@@ -10,7 +13,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 // import javafx.stage.Stage;
 // import triviagame.App;
@@ -19,10 +24,14 @@ import triviagame.Globals;
 import triviagame.handlers.StageHandler;
 import triviagame.handlers.SocketHandler;
 
-public class PageConnect {
+import triviagame.interfaces.HasChatBox;
+
+public class PageConnect implements HasChatBox{
 
     StageHandler stageHandler = Globals.stageHandler;
     SocketHandler socketHandler = Globals.socketHandler;
+
+    public Timer timer;
 
     @FXML
     private Button btn_connect;
@@ -40,6 +49,9 @@ public class PageConnect {
     private TextFlow txt_log;
 
     @FXML
+    private ScrollPane scroll;
+
+    @FXML
     private TextField txtf_server;
 
     @FXML
@@ -47,6 +59,9 @@ public class PageConnect {
 
     @FXML
     void connectToServer(ActionEvent event) {
+        
+        // scroll.setVmin(1.0);
+
         String username = txtf_username.getText();
 
         if(username.isBlank()){
@@ -76,13 +91,17 @@ public class PageConnect {
             public void call(Object... args) {
                 JSONObject reply = new JSONObject((String)args[0]);
                 Platform.runLater(() -> {
+                    
+                    updateTimer(reply.getInt("countdown"));    
+
                     if(reply.get("connection").equals("success")){
                         btn_connect.setDisable(true);
                         btn_connect.setText("Conectado.");
                         lbl_error_msg.setStyle("-fx-text-fill: black;");
                         lbl_error_msg.setText("Aguardando inicio da partida!");
                         txtf_username.setDisable(true);
-
+                        
+                        //iniciar jogo:
                         socketHandler.initGameListeners();
 
                     }else if(reply.get("connection").equals("full")){
@@ -110,9 +129,54 @@ public class PageConnect {
         });
     }
 
-    public void olamundo(){
-        System.out.println("helloworld");
+    public void updateTimer(int seconds){
+        final Double time = (1.0/300.0) * seconds;
+        pgb_timer_connect.setProgress(time);
     }
 
+    public void startTimer(){
+        // 100% - 0.1+ - 10s
+        // 100% - 0.01+ - 100s
+        // 100% - 0.005 - 200s
+        // 100% - 0.0025 - 400s
+        // 100% - 0.00333333 - 300s
+        final Double time = 1.0/300.0; //100% / 300s = 0.003333...
 
+        if(timer != null){
+            timer.cancel();
+            timer.purge();
+        }
+
+        timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run(){
+                Platform.runLater(() -> {
+                    Double progress = pgb_timer_connect.getProgress();
+                    pgb_timer_connect.setProgress(progress - time);
+
+                    if(progress < 0){
+                        timer.cancel();
+                        timer.purge();
+                    }
+                });
+            }
+        };
+        timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    public void printLine(String line){
+        Platform.runLater(() -> {
+            txt_log.getChildren().add(new Text(line + "\n"));
+            scroll.layout();
+            scroll.setVvalue(1.0f);
+        });
+    }
+
+    public void updatePlayerCount(int count){
+        Platform.runLater(() -> {
+            lbl_qtde_players.setText(Integer.toString(count) + "/5");
+        });
+    }
+    
 }
