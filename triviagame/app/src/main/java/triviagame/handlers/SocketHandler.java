@@ -12,8 +12,11 @@ import io.socket.emitter.Emitter;
 import triviagame.controllers.PageChooseTopic;
 import triviagame.controllers.PageConnect;
 // import triviagame.controllers.PageTriviaGame;
+// import triviagame.controllers.PageTriviaGameMaster;
+// import triviagame.controllers.PageTriviaGame;
 import triviagame.controllers.PageWaitTopic;
 import triviagame.interfaces.HasChatBox;
+import triviagame.interfaces.PageTrivia;
 
 public class SocketHandler {
 
@@ -76,27 +79,44 @@ public class SocketHandler {
             }
         });
 
+        //atualizar chatbox
         socket.on("newEvent", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                JSONObject event = new JSONObject((String)args[0]);
-
+                System.out.println("NewEvent: " + (String)args[0]);
                 //get controller
                 HasChatBox controller = (HasChatBox) stageHandler.getSceneController();
+                                
+                JSONObject event = new JSONObject((String)args[0]);
+                controller.updateTimer(event.getInt("countdown"));
 
                 //type join
                 if(event.getString("type").equals("join")){
                     controller.printLine(event.getString("username") + " entrou no jogo...");
                     controller.updatePlayerCount(event.getInt("playerCount"));
-
                 }
 
-                System.out.println((String)args[0]);
+                //type notEnoughPlayers
+                else if(event.getString("type").equals("notEnoughPlayers")){
+                    controller.printLine("Nao ha jogadores o suficiente... Reiniciando contagem!");
+                }
 
-                // JSONObject reply = new JSONObject((String)args[0]);
-                              
-                // controller.printLine("alo");
-                // controller.getClass().
+                //type gameHasBegun
+                else if(event.getString("type").equals("gameHasBegun")){
+                    controller.printLine("Tudo pronto! O jogo esta comecando!");             
+                }
+
+                //type disconnect
+                else if(event.getString("type").equals("disconnect")){
+                    controller.printLine(event.getString("username") + " saiu do jogo...");
+                }
+
+                //type newmessage
+                else if(event.getString("type").equals("newMessage")){
+                    controller.printLine(event.getString("username") + ": " + event.getString("message"));
+                }
+
+                
             }
         });
                
@@ -122,7 +142,7 @@ public class SocketHandler {
 
     public void initGameListeners(){
        
-        socket.on("startRound", new Emitter.Listener() {
+        socket.on("ChooseTopic", new Emitter.Listener() {
             @Override
             public void call(Object... args) {             
                 JSONObject reply = new JSONObject((String)args[0]);
@@ -154,10 +174,32 @@ public class SocketHandler {
             }
         });
 
-        socket.on("startGameplay", new Emitter.Listener() {
+        socket.on("startTrivia", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                // JSONObject reply = new JSONObject((String)args[0]);
+                System.out.println("START TRIVIA" + (String)args[0]);
+                JSONObject response = new JSONObject((String)args[0]);
+
+                try{
+                    //Carregar páginas
+                    if(response.getString("playerType").equals("master")){
+                        stageHandler.changeSceneSynchronous("/pages/pageTriviaGameMaster.fxml");
+                    }else{
+                        stageHandler.changeSceneSynchronous("/pages/pageTriviaGame.fxml");
+                    }
+                    
+                    //atualizar informaçoes
+                    PageTrivia controller = (PageTrivia) stageHandler.getSceneController();
+
+                    controller.startUI(response);
+                    controller.startTimer();
+
+
+                }catch(Exception e){
+                    System.out.println("Exception Error: " + e);
+                }
+                // CONTINUAR
+
             }
         });
 

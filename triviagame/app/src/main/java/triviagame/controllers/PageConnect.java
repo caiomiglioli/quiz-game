@@ -86,17 +86,17 @@ public class PageConnect implements HasChatBox{
         // se houver falha, eu me mantenho na pagina
         Socket socket = socketHandler.getSocket();
 
-        socket.once("joinGameReply", new Emitter.Listener() {
+        socket.on("joinGameReply", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 JSONObject reply = new JSONObject((String)args[0]);
                 Platform.runLater(() -> {
                     
-                    updateTimer(reply.getInt("countdown"));    
+                    // updateTimer(reply.getInt("countdown"));    
 
                     if(reply.get("connection").equals("success")){
                         btn_connect.setDisable(true);
-                        btn_connect.setText("Conectado.");
+                        btn_connect.setText("Conectado");
                         lbl_error_msg.setStyle("-fx-text-fill: black;");
                         lbl_error_msg.setText("Aguardando inicio da partida!");
                         txtf_username.setDisable(true);
@@ -130,8 +130,11 @@ public class PageConnect implements HasChatBox{
     }
 
     public void updateTimer(int seconds){
-        final Double time = (1.0/300.0) * seconds;
-        pgb_timer_connect.setProgress(time);
+        Platform.runLater(() -> {
+            final Double time = (1.0/300.0) * seconds;
+            pgb_timer_connect.layout();
+            pgb_timer_connect.setProgress(time);
+        });
     }
 
     public void startTimer(){

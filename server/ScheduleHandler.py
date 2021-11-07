@@ -23,7 +23,8 @@ class ScheduleHandler():
     #end start
 
     def terminate(self):
-        self.cease_continuous_run.set()
+        if self.cease_continuous_run:
+            self.cease_continuous_run.set()
     #end terminate
 
 

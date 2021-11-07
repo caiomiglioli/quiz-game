@@ -1,26 +1,24 @@
 import eventlet
 import socketio
 import json
-
-import time
+import threading
 
 from Game import Game
+from Timer import Timer
 
-# data = {"hello" : "world"}
-# jsonreturn = json.dumps(data)
-
-# print("datadump: " + json.dumps(data))
-
-sio = socketio.Server()
-app = socketio.WSGIApp(sio, static_files={
-    '/': {'content_type': 'text/html', 'filename': 'index.html'}
-})
+#instancia do socketio
+sio = socketio.Server(logger=True, engineio_logger=True)
+app = socketio.WSGIApp(sio)
 
 #instancia do jogo
 game = Game(sio)
 
+
+#######################################################
+#game game game game game game game game game game game
 @sio.event
 def connect(sid, environ):
+    sio.enter_room(sid, game.ROOM)
     print('connect ', sid)
     res = json.dumps(game.getPlayerNames())
     sio.emit('connectReply', res, room=sid)
@@ -28,42 +26,69 @@ def connect(sid, environ):
 
 @sio.event
 def disconnect(sid):
+    game.newEvent("disconnect", sid)
     game.removePlayer(sid)
     print('disconnect ', sid)
-    # sio.emit('disconnectReply', 'succesful!', room=sid)
 #end disconnect
 
 @sio.event
 def joinGame(sid, data):
     res = game.addPlayer(sid, data)
     sio.emit('joinGameReply', json.dumps(res), room=sid)
-    
-    if res['connection'] == 'success':
-        print("successsssssssssssssssssssssssssssssssssssssssssssssssss")
-        sio.enter_room(sid, game.ROOM)
-        game.newEvent(sid, 'join')
 #end joingame
 
 @sio.event
 def gameReady(sid, data):
     game.setPlayerReady(sid, True)
-    #teste
-    # data = {"playerType" : "player"}
-    # jsonreturn = json.dumps(data)
-    # sio.emit('startRound', jsonreturn, room=sid)
-    # print('startround enviado ', jsonreturn)
-#end playerconnect
+
+@sio.event
+def startTrivia(sid, data):
+    game.chooseTopicSelect(sid, data)#json.loads(data))
+
+@sio.event
+def newMessage(sid, data):
+    game.newEvent('newMessage', sid, data)#json.loads(data))
+
+#game game game game game game game game game game game
+#######################################################
 
 
-# @sio.event
-# def hello(sid, dataaa):
-#     print('dict' + dataaa['heeello'])
-#     print("data: " + json.dumps(dataaa))
+#######################################################
+# timer timer timer timer timer timer timer timer timer 
+@sio.event
+def socketHandshake(sid, data):
+    print("** timer connected - sid: " + sid)
+    game.SIDTIMER = sid
+    sio.leave_room(sid, game.ROOM)
+    # sio.emit("timerStart", "message", room=sid)
 
-#     # print('hello ', data)
-#     sio.emit('world', jsonreturn, room=sid)
+@sio.event
+def timeout(sid, data):
+    res = json.loads(data)
+    if(res['callback'] == 'pageConnect'):
+        game.startGame()
+    
+    if(res['callback'] == 'chooseTopicTimeout'):
+        game.chooseTopicTimeout()
+    
+    print("TIMEOUT #########################################")
 
+@sio.event
+def countdownUpdate(sid, data):
+    game.countdown = json.loads(data)['countdown']
 
+# funcao main da thread countdown
+def countdown():
+    timer = Timer()
+    timer.connect()
 
+# instanciando thread countdown
+ct = threading.Thread(target = countdown)
+ct.setDaemon(True)
+ct.start()
+# timer timer timer timer timer timer timer timer timer 
+#######################################################
+
+#server start
 if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.listen(('', 5000)), app)

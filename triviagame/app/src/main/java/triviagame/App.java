@@ -22,8 +22,8 @@ import javafx.stage.Stage;
 
 //terminate application
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
+// import javafx.event.EventHandler;
+// import javafx.stage.WindowEvent;
 
 //Handlers
 import triviagame.handlers.SocketHandler;
