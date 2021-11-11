@@ -86,7 +86,7 @@ public class SocketHandler {
                 System.out.println("NewEvent: " + (String)args[0]);
                 //get controller
                 HasChatBox controller = (HasChatBox) stageHandler.getSceneController();
-                                
+                
                 JSONObject event = new JSONObject((String)args[0]);
                 controller.updateTimer(event.getInt("countdown"));
 
@@ -121,7 +121,11 @@ public class SocketHandler {
                     controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
                 }
 
-                
+                else if(event.getString("type").equals("finishRound")){
+                    System.out.printf("voltou pro front java com: \n", event.getString("attempt"));
+                    controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
+                }
+
             }
         });
                

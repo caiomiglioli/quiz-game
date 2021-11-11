@@ -51,7 +51,7 @@ def newMessage(sid, data):
 
 @sio.event
 def newAttempt(sid, data):
-    game.newEvent('newAttempt', sid, data)
+    game.computeAttempt(sid, data)
 
 #game game game game game game game game game game game
 #######################################################
@@ -74,6 +74,9 @@ def timeout(sid, data):
     
     if(res['callback'] == 'chooseTopicTimeout'):
         game.chooseTopicTimeout()
+
+    if(res['callback'] == 'triviaTimeout'):
+        game.triviaTimeout()
     
     print("TIMEOUT #########################################")
 

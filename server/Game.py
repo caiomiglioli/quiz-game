@@ -245,25 +245,43 @@ class Game:
         self.startTimer(self.triviaTime, "triviaTimeout")
         
 
-    def attemptStatus(self, attempt):
-        str_return = attempt
+    def computeAttempt(self, sid, data):
+        str_return = data['attempt']
+        player = self.getPlayerFromSID(sid)
 
-        if attempt == self.answer:
+        if data['attempt'].lower() == self.answer.lower():
             str_return = "acertou!"
+            self.roundScorers += 1
+            player['points'] += self.score - (self.roundScorers*2)
+            print("PONTUAÇãO DO PLAYER:  ", player['points'])
         
-        elif len(attempt) == len(self.answer):
-            Normalized_HD = distance.hamming(list(attempt), list(self.answer))
+        elif len(data['attempt']) == len(self.answer):
+            Normalized_HD = distance.hamming(list(data['attempt']), list(self.answer))
             if Normalized_HD <= 0.4:
                 str_return = "passou perto..."
-        self.newEvent('newAttempt')
-        return str_return
 
-    def computePoints(self, player):
-        roundScore = self.score - self.roundScorers
-        self.roundScorers += 1
-        player['points'] += roundScore
-        print("PONTUAÇãO DO PLAYER:  ", player['points'])
-        
+        self.newEvent('newAttempt', sid, {'attempt': str_return})
+        if self.roundScorers == len(self.players)-1:
+            self.triviaTimeout(data['attempt'])
+
+    def triviaTimeout(self, answer):
+        self.roundScorers = 0
+
+        self.cancelTimer('triviaTimeout')
+
+        self.finishRound(answer)
+
+        # 
+
+        #passa pra tela de final de round
+        #termina round e reseta roundScorers
+
+    def finishRound(self, answer):
+        self.sio.emit('finishRound', {'answer': answer})
+        time.sleep(3)
+        self.startRound()
+
+        pass
 
     #====>> gameplay
     
@@ -302,11 +320,8 @@ class Game:
         if type == 'newAttempt':
             player = self.getPlayerFromSID(sid)
             if player:
-                res['username'] = data['playerType'] + player['username']
-                attempt = data['attempt']
-                res['attempt'] = self.attemptStatus(attempt)
-                if res['attempt'] == "acertou!":
-                    self.computePoints(player)
+                res['username'] = player['username']
+                res['attempt'] = data['attempt']
 
                 self.sio.emit('newEvent', json.dumps(res), room=self.ROOM)
     #end newevent
