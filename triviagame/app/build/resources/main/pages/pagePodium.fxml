@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="311.0" fitWidth="349.0" layoutX="126.0" layoutY="89.0">
+         <image>
+            <Image url="@../../../../../../../../../../Downloads/podio.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lbl_1lugar" alignment="CENTER" layoutX="230.0" layoutY="29.0" prefHeight="77.0" prefWidth="142.0" text=" ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_3lugar" alignment="CENTER" layoutX="139.0" layoutY="232.0" prefHeight="51.0" prefWidth="113.0" text=" ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="lbl_2lugar" alignment="CENTER" layoutX="357.0" layoutY="206.0" prefHeight="51.0" prefWidth="113.0" text=" ">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

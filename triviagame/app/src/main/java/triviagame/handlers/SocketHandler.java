@@ -116,6 +116,11 @@ public class SocketHandler {
                     controller.printLine(event.getString("username") + ": " + event.getString("message"));
                 }
 
+                else if(event.getString("type").equals("newAttempt")){
+                    System.out.printf("voltou pro front java com: \n", event.getString("attempt"));
+                    controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
+                }
+
                 
             }
         });
@@ -193,7 +198,6 @@ public class SocketHandler {
 
                     controller.startUI(response);
                     controller.startTimer();
-
 
                 }catch(Exception e){
                     System.out.println("Exception Error: " + e);

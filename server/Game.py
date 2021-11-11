@@ -3,6 +3,8 @@ import schedule
 import socketio
 import json
 
+from scipy.spatial import distance
+
 from ScheduleHandler import ScheduleHandler
 
 class Game:
@@ -17,6 +19,9 @@ class Game:
         self.clue = None            #dica
         self.answer = None          #resposta
 
+        self.roundScorers = 0       #quantidade de jogadores que acertaram no round
+        self.score = 10             #quantidade maxima de pontos que alguem ganha em um round
+
         #controles
         self.countdown = 300        #countdown do timeout
         self.hasBegun = False       #game iniciou
@@ -24,7 +29,7 @@ class Game:
         self.maxHalf = 2            #conta quantas vezes cada jogador pode ser o mestre
         self.currentHalf = 0        #conta quantas vezes cada jogador foi o mestre
 
-        self.pageConnectTime = 30   #indica o tempo de timeout da página Connect
+        self.pageConnectTime = 10   #indica o tempo de timeout da página Connect
         self.chooseTopicTime = 30   #indica o tempo de timeout da página ChooseTopic
         self.triviaTime = 60        #indica o tempo de timeout da página TriviaGame
     #end init
@@ -238,7 +243,27 @@ class Game:
         
         #start countdown
         self.startTimer(self.triviaTime, "triviaTimeout")
+        
 
+    def attemptStatus(self, attempt):
+        str_return = attempt
+
+        if attempt == self.answer:
+            str_return = "acertou!"
+        
+        elif len(attempt) == len(self.answer):
+            Normalized_HD = distance.hamming(list(attempt), list(self.answer))
+            if Normalized_HD <= 0.4:
+                str_return = "passou perto..."
+        self.newEvent('newAttempt')
+        return str_return
+
+    def computePoints(self, player):
+        roundScore = self.score - self.roundScorers
+        self.roundScorers += 1
+        player['points'] += roundScore
+        print("PONTUAÇãO DO PLAYER:  ", player['points'])
+        
 
     #====>> gameplay
     
@@ -272,6 +297,17 @@ class Game:
             if player:
                 res['username'] = data['playerType'] + player['username']
                 res['message'] = data['message']
+                self.sio.emit('newEvent', json.dumps(res), room=self.ROOM)
+
+        if type == 'newAttempt':
+            player = self.getPlayerFromSID(sid)
+            if player:
+                res['username'] = data['playerType'] + player['username']
+                attempt = data['attempt']
+                res['attempt'] = self.attemptStatus(attempt)
+                if res['attempt'] == "acertou!":
+                    self.computePoints(player)
+
                 self.sio.emit('newEvent', json.dumps(res), room=self.ROOM)
     #end newevent
 

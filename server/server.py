@@ -49,6 +49,10 @@ def startTrivia(sid, data):
 def newMessage(sid, data):
     game.newEvent('newMessage', sid, data)#json.loads(data))
 
+@sio.event
+def newAttempt(sid, data):
+    game.newEvent('newAttempt', sid, data)
+
 #game game game game game game game game game game game
 #######################################################
 

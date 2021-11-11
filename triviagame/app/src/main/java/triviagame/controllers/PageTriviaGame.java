@@ -72,10 +72,12 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
             json.put("message", texto.substring(1));
             json.put("playerType", "[P] ");  
             this.socketHandler.emit("newMessage", json);
-        
         //resposta do trivia
         }else{
-            //tentativa 
+            JSONObject json = new JSONObject();
+            json.put("attempt", texto);
+            json.put("playerType", "[P] ");
+            this.socketHandler.emit("newAttempt", json);
         }
     }
 
