@@ -117,15 +117,8 @@ public class SocketHandler {
                 }
 
                 else if(event.getString("type").equals("newAttempt")){
-                    System.out.printf("voltou pro front java com: \n", event.getString("attempt"));
                     controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
                 }
-
-                else if(event.getString("type").equals("finishRound")){
-                    System.out.printf("voltou pro front java com: \n", event.getString("attempt"));
-                    controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
-                }
-
             }
         });
                
@@ -210,7 +203,6 @@ public class SocketHandler {
 
             }
         });
-
 
         //emitir sinal de que o player está pronto'
         socket.emit("gameReady", "success");
