@@ -91,8 +91,11 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
         Platform.runLater(() -> {
             updateTimer(data.getInt("countdown"));
             lbl_clue.setText("Dica: " + data.getString("clue"));
+            String _clue = "________________________________________";
+            updateClue(_clue.substring(0, data.getString("answer").length()));
             lbl_topic.setText("Tema: " + data.getString("topic"));
             lbl_info.setText("Palavra de " + data.getString("answer").length() + " letras");
+            
             this.isAttemptDisabled = false;
 
             //txtf_playerRank
@@ -158,8 +161,20 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
+    
     public void disableAttempt(){
         this.isAttemptDisabled = true;
+    }
+
+    public void updateClue(String clue){
+        Platform.runLater(() -> {
+            String aux = "";
+            for(int i=0; i<clue.length(); i++){
+                aux += Character.toString(clue.charAt(i)) + ' ';
+            }
+
+            lbl_better_clue.setText(aux.substring(0, aux.length()-1));
+        });
     }
 
     //nao utilizados

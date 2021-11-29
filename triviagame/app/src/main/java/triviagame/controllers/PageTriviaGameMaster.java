@@ -77,11 +77,20 @@ public class PageTriviaGameMaster implements PageTrivia, HasChatBox {
         txtf_send.setText("");
     }
 
+    @FXML
+    void send_clue(ActionEvent event) {     
+        this.socketHandler.emit("giveClue", "clue");
+        btn_sendClue.setDisable(true);
+    }
+
     // void updateUI(JSONObject json){
     public void startUI(JSONObject data){
         Platform.runLater(() -> {
+            btn_sendClue.setDisable(false);
             updateTimer(data.getInt("countdown"));
             lbl_clue.setText("Dica: " + data.getString("clue"));
+            String _clue = "________________________________________";
+            updateClue(_clue.substring(0, data.getString("answer").length()));
             lbl_topic.setText("Tema: " + data.getString("topic"));
             lbl_answer.setText("Resposta: " + data.getString("answer"));
             lbl_info.setText("Palavra de " + data.getString("answer").length() + " letras");
@@ -148,6 +157,17 @@ public class PageTriviaGameMaster implements PageTrivia, HasChatBox {
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    public void updateClue(String clue){
+        Platform.runLater(() -> {
+            String aux = "";
+            for(int i=0; i<clue.length(); i++){
+                aux += Character.toString(clue.charAt(i)) + ' ';
+            }
+
+            lbl_better_clue.setText(aux.substring(0, aux.length()-1));
+        });
     }
 
     //nao utilizados

@@ -68,7 +68,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="btn_sendClue" defaultButton="true" layoutX="11.0" layoutY="194.0" mnemonicParsing="false" onAction="#send_msg" prefHeight="38.0" prefWidth="179.0" text="DAR DICA" />
+            <Button fx:id="btn_sendClue" defaultButton="true" layoutX="11.0" layoutY="194.0" mnemonicParsing="false" onAction="#send_clue" prefHeight="38.0" prefWidth="179.0" text="DAR DICA" />
             <Label fx:id="lbl_answer" alignment="TOP_LEFT" layoutX="9.0" layoutY="105.0" prefHeight="38.0" prefWidth="179.0" text="Resposta: Aguardando..." wrapText="true">
                <font>
                   <Font size="14.0" />

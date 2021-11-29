@@ -53,6 +53,10 @@ def newMessage(sid, data):
 def newAttempt(sid, data):
     game.computeAttempt(sid, data)
 
+@sio.event
+def giveClue(sid, data):
+    game.giveClueUtil()
+
 #game game game game game game game game game game game
 #######################################################
 

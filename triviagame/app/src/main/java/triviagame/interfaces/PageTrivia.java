@@ -6,4 +6,5 @@ public interface PageTrivia {
     public void printLine(String line);
     public void startUI(JSONObject data);
     public void startTimer();
+    public void updateClue(String clue);
 }

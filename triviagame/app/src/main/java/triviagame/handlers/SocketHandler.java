@@ -216,6 +216,20 @@ public class SocketHandler {
             }
         });
 
+        socket.on("newClue", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject reply = new JSONObject((String)args[0]);
+
+                try {
+                    PageTrivia controller = (PageTrivia) stageHandler.getSceneController();
+                    controller.updateClue(reply.getString("clue"));
+                } catch (Exception e) {
+                    System.out.println("Exception Error: " + e);
+                }
+            }
+        });
+
         socket.on("finishRound", new Emitter.Listener() {
             @Override
             public void call(Object... args) {                

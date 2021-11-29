@@ -3,6 +3,9 @@ import schedule
 import socketio
 import json
 
+import random
+import math
+
 from scipy.spatial import distance
 
 from ScheduleHandler import ScheduleHandler
@@ -19,7 +22,11 @@ class Game:
         self.clue = None            #dica
         self.answer = None          #resposta
 
+        self.percentClue = 0.3
+
+
         self.roundScorers = 0       #quantidade de jogadores que acertaram no round
+        self.cluePunishment = 0
         self.score = 10             #quantidade maxima de pontos que alguem ganha em um round
 
         #controles
@@ -63,7 +70,6 @@ class Game:
 
     #Adicionar players ao jogo quando clicarem no botão "Conectar" na página conect
     def addPlayer(self, sid, data):
-        # jsonreturn = json.dumps(data)
         #sincronizar o countdown de todo mundo (progressbar)
         obj_return = {}
 
@@ -157,6 +163,7 @@ class Game:
             #fazer o proximo jogador ser master
             self.currentMaster += 1
             self.roundScorers = 0
+            self.cluePunishment = 0
         
         #se sim,
         else:  
@@ -256,9 +263,9 @@ class Game:
 
         if data['attempt'].lower() == self.answer.lower():
             str_return = "acertou!"
-            pointsScored = self.score - (self.roundScorers*2)
+            pointsScored = self.score - (self.roundScorers*2) - (self.cluePunishment*2)
             player['points'] += pointsScored if (pointsScored > 1) else 1
-            master['points'] += self.score/len(self.players)
+            master['points'] += (self.score - (self.cluePunishment*2))/len(self.players)
             self.roundScorers += 1
             print("PONTUAÇãO DO PLAYER:  ", player['points'])
         
@@ -303,6 +310,27 @@ class Game:
 
         self.sio.emit('gameOver', json.dumps(podium), room=self.ROOM)
         
+    def giveClueUtil(self):
+        reply = [ '_' for i in range(len(self.answer))] # fazer um "_" com o mesmo numero de caracteres da resposta
+
+        num = math.ceil(len(self.answer) * self.percentClue) # quantas letras eu vou dar na dica
+
+        while(num > 0): #enquanto eu nao setei todos os caracteres:
+            for i in range(len(self.answer)): #para cada letra da resposta
+                if(reply[i] != self.answer[i]): #testar se no reply está "" ou se já foi mostrada
+                    if random.random() > 1-self.percentClue: #escolher aleatoriamente se vou mostrar essa letra
+                        reply[i] = self.answer[i] #colocar letra no vetor de caracteres
+                        num -= 1
+                if num <= 0: #curto circuito pra evitar que eu mostre mais letras doq num
+                    break
+
+        reply = "".join(reply) #juntar os caracteres numa string
+        res = {'clue': reply}
+
+        self.sio.emit('newClue', json.dumps(res), room=self.ROOM)
+        self.cluePunishment = 1
+        # print(reply)
+
 
     #====>> gameplay
     
@@ -373,8 +401,4 @@ class Game:
     def cancelTimer(self, timersCallback):
         self.sio.emit("cancelCountdown", json.dumps({"callback" : timersCallback}), sid=self.SIDTIMER)
     #end canceltimer
-    
-    # jsonreturn = json.dumps(data)
-    # sio.emit('startRound', jsonreturn, room=sid)
-
     
