@@ -27,6 +27,7 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
     StageHandler stageHandler = Globals.stageHandler;
     SocketHandler socketHandler = Globals.socketHandler;
     public Timer timer;
+    private boolean isAttemptDisabled = false;
 
     @FXML
     private Button btn_send;
@@ -74,10 +75,14 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
             this.socketHandler.emit("newMessage", json);
         //resposta do trivia
         }else{
-            JSONObject json = new JSONObject();
-            json.put("attempt", texto);
-            json.put("playerType", "[P] ");
-            this.socketHandler.emit("newAttempt", json);
+            if(this.isAttemptDisabled == true){
+                printLine("ERRO: você já acertou.");
+            }else{
+                JSONObject json = new JSONObject();
+                json.put("attempt", texto);
+                json.put("playerType", "[P] ");
+                this.socketHandler.emit("newAttempt", json);
+            }
         }
     }
 
@@ -88,17 +93,19 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
             lbl_clue.setText("Dica: " + data.getString("clue"));
             lbl_topic.setText("Tema: " + data.getString("topic"));
             lbl_info.setText("Palavra de " + data.getString("answer").length() + " letras");
+            this.isAttemptDisabled = false;
 
             //txtf_playerRank
             for(int i=1; i<=data.getInt("playerCount"); i++){
                 String player = "player" + i;
                 String points = "player" + i + "_points";
-                String master = "[P] ";
+                String master = "[P]";
 
                 if( data.getString(player).equals(data.getString("master")) ){
-                    master = "[M] ";
+                    master = "[M]";
                 }
-                printRank(master + data.getString(player) + ": " + data.getDouble(points) + " pontos");
+                String rank = String.format("%s %s: %.1f pontos", master, data.getString(player), data.getDouble(points));
+                printRank(rank);
             }
 
         });
@@ -118,7 +125,6 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
         });
     }
     
-
     public void updateTimer(int seconds){
         Platform.runLater(() -> {
             final Double time = (1.0/120.0) * seconds;
@@ -151,6 +157,9 @@ public class PageTriviaGame implements PageTrivia, HasChatBox {
             }
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+    public void disableAttempt(){
+        this.isAttemptDisabled = true;
     }
 
     //nao utilizados

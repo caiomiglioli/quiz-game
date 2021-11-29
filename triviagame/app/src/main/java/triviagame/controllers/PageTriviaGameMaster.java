@@ -95,7 +95,8 @@ public class PageTriviaGameMaster implements PageTrivia, HasChatBox {
                 if( data.getString(player).equals(data.getString("master")) ){
                     master = "[M] ";
                 }
-                printRank(master + data.getString(player) + ": " + data.getDouble(points) + " pontos");
+                String rank = String.format("%s %s: %.1f pontos", master, data.getString(player), data.getDouble(points));
+                printRank(rank);   
             }
 
         });
@@ -151,4 +152,5 @@ public class PageTriviaGameMaster implements PageTrivia, HasChatBox {
 
     //nao utilizados
     public void updatePlayerCount(int count){}
+    public void disableAttempt(){}
 }

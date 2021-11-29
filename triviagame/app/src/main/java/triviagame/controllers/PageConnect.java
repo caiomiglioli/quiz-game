@@ -61,9 +61,9 @@ public class PageConnect implements HasChatBox{
     void connectToServer(ActionEvent event) {
         
         // scroll.setVmin(1.0);
-
+        
         String username = txtf_username.getText();
-
+        
         if(username.isBlank()){
             lbl_error_msg.setStyle("-fx-text-fill: red;");
             lbl_error_msg.setText("Erro: Campo vazio!");
@@ -73,19 +73,19 @@ public class PageConnect implements HasChatBox{
             lbl_error_msg.setStyle("-fx-text-fill: green;");
             lbl_error_msg.setText("Entrando na partida...");
         }
-
+        
         /***********************
-        conectar com o servidor
+         conectar com o servidor
         ************************/
-
+        
         //enviar objeto json
         JSONObject json = new JSONObject();
         json.put("username", username);                
         this.socketHandler.emit("joinGame", json);
-
+        
         // se houver falha, eu me mantenho na pagina
         Socket socket = socketHandler.getSocket();
-
+        
         socket.on("joinGameReply", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -93,7 +93,7 @@ public class PageConnect implements HasChatBox{
                 Platform.runLater(() -> {
                     
                     // updateTimer(reply.getInt("countdown"));    
-
+                    
                     if(reply.get("connection").equals("success")){
                         btn_connect.setDisable(true);
                         btn_connect.setText("Conectado");
@@ -103,22 +103,22 @@ public class PageConnect implements HasChatBox{
                         
                         //iniciar jogo:
                         socketHandler.initGameListeners();
-
+                        
                     }else if(reply.get("connection").equals("full")){
                         btn_connect.setDisable(false);
                         lbl_error_msg.setStyle("-fx-text-fill: red;");
                         lbl_error_msg.setText("Erro: Nao ha vagas!");
-
+                        
                     }else if(reply.get("connection").equals("running")){
                         btn_connect.setDisable(false);
                         lbl_error_msg.setStyle("-fx-text-fill: red;");
                         lbl_error_msg.setText("Erro: Jogo esta em andamento!");
-                    
+                        
                     }else if(reply.get("connection").equals("duplicate")){
                         btn_connect.setDisable(false);
                         lbl_error_msg.setStyle("-fx-text-fill: red;");
                         lbl_error_msg.setText("Erro: Apelido ja esta em uso!");
-
+                        
                     }else{
                         btn_connect.setDisable(false);
                         lbl_error_msg.setStyle("-fx-text-fill: red;");
@@ -128,7 +128,7 @@ public class PageConnect implements HasChatBox{
             }
         });
     }
-
+    
     public void updateTimer(int seconds){
         Platform.runLater(() -> {
             final Double time = (1.0/300.0) * seconds;
@@ -144,12 +144,12 @@ public class PageConnect implements HasChatBox{
         // 100% - 0.0025 - 400s
         // 100% - 0.00333333 - 300s
         final Double time = 1.0/300.0; //100% / 300s = 0.003333...
-
+        
         if(timer != null){
             timer.cancel();
             timer.purge();
         }
-
+        
         timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
@@ -157,7 +157,7 @@ public class PageConnect implements HasChatBox{
                 Platform.runLater(() -> {
                     Double progress = pgb_timer_connect.getProgress();
                     pgb_timer_connect.setProgress(progress - time);
-
+                    
                     if(progress < 0){
                         timer.cancel();
                         timer.purge();
@@ -167,7 +167,7 @@ public class PageConnect implements HasChatBox{
         };
         timer.scheduleAtFixedRate(task, 0, 1000);
     }
-
+    
     public void printLine(String line){
         Platform.runLater(() -> {
             txt_log.getChildren().add(new Text(line + "\n"));
@@ -175,11 +175,13 @@ public class PageConnect implements HasChatBox{
             scroll.setVvalue(1.0f);
         });
     }
-
+    
     public void updatePlayerCount(int count){
         Platform.runLater(() -> {
             lbl_qtde_players.setText(Integer.toString(count) + "/5");
         });
     }
-    
+
+    // inutil
+    public void disableAttempt(){}
 }

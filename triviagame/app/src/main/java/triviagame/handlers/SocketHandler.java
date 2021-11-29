@@ -11,12 +11,14 @@ import io.socket.emitter.Emitter;
 // import javafx.application.Platform;
 import triviagame.controllers.PageChooseTopic;
 import triviagame.controllers.PageConnect;
+import triviagame.controllers.PagePodium;
 // import triviagame.controllers.PageTriviaGame;
 // import triviagame.controllers.PageTriviaGameMaster;
 // import triviagame.controllers.PageTriviaGame;
 import triviagame.controllers.PageWaitTopic;
 import triviagame.interfaces.HasChatBox;
 import triviagame.interfaces.PageTrivia;
+import triviagame.interfaces.PageAnswer;
 
 public class SocketHandler {
 
@@ -119,9 +121,19 @@ public class SocketHandler {
                 else if(event.getString("type").equals("newAttempt")){
                     controller.printLine(event.getString("username") + ": " + event.getString("attempt"));
                 }
+                
+                else if(event.getString("type").equals("rightAnswer")){
+                    controller.printLine("Voce ganhou " + Integer.toString(event.getInt("pointsScored")) + " pontos!");
+                    controller.disableAttempt();
+                }
+
+                else if(event.getString("type").equals("gameOver")){
+                    controller.printLine("Jogo finalizado!!!");
+                    controller.printLine("Calculando vencedores...");
+                }
             }
         });
-               
+     
         System.out.println("socket handler iniciado");
     }
 
@@ -204,6 +216,35 @@ public class SocketHandler {
             }
         });
 
+        socket.on("finishRound", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {                
+                JSONObject reply = new JSONObject((String)args[0]);
+                //get controller
+                try {
+                    stageHandler.changeSceneSynchronous("/pages/pageRoundIsOver.fxml");
+                    PageAnswer controller = (PageAnswer) stageHandler.getSceneController();
+                    controller.showAnswer(reply.getString("answer"));
+                } catch (Exception e) {
+                    System.out.println("Exception Error: " + e);
+                }
+            }
+        });
+
+        socket.on("gameOver", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {                
+                JSONObject reply = new JSONObject((String)args[0]);
+
+                try {
+                    stageHandler.changeSceneSynchronous("/pages/pagePodium.fxml");
+                    PagePodium controller = (PagePodium) stageHandler.getSceneController();
+                    controller.updateRank(reply);
+                } catch (Exception e) {
+                    System.out.println("Exception Error: " + e);
+                }
+            }
+        });
         //emitir sinal de que o player está pronto'
         socket.emit("gameReady", "success");
 
