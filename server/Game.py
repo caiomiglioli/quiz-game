@@ -31,6 +31,7 @@ class Game:
 
         self.pageConnectTime = 10   #indica o tempo de timeout da página Connect
         self.chooseTopicTime = 30   #indica o tempo de timeout da página ChooseTopic
+        self.roundIsOverTime = 10   #indica o tempo de timeout da página RoundIsOver
         self.triviaTime = 60        #indica o tempo de timeout da página TriviaGame
     #end init
 
@@ -155,6 +156,7 @@ class Game:
             self.chooseTopic(self.currentMaster)
             #fazer o proximo jogador ser master
             self.currentMaster += 1
+            self.roundScorers = 0
         
         #se sim,
         else:  
@@ -166,7 +168,9 @@ class Game:
                 self.startRound()
             #sim, então fim de jogo
             else:
-                pass
+                self.newEvent('gameOver')
+                self.startTimer(5, "gameOverTimeout")
+
                 #fim de jogo
     #end startround
 
@@ -242,17 +246,20 @@ class Game:
             self.sio.emit('startTrivia', json.dumps(data), room=player['sid'])
         
         #start countdown
-        self.startTimer(self.triviaTime, "triviaTimeout")
-        
+        self.startTimer(self.triviaTime, "triviaTimeout")  
 
     def computeAttempt(self, sid, data):
         str_return = data['attempt']
         player = self.getPlayerFromSID(sid)
+        master = self.players[self.currentMaster-1]
+        pointsScored = 0
 
         if data['attempt'].lower() == self.answer.lower():
             str_return = "acertou!"
+            pointsScored = self.score - (self.roundScorers*2)
+            player['points'] += pointsScored if (pointsScored > 1) else 1
+            master['points'] += self.score/len(self.players)
             self.roundScorers += 1
-            player['points'] += self.score - (self.roundScorers*2)
             print("PONTUAÇãO DO PLAYER:  ", player['points'])
         
         elif len(data['attempt']) == len(self.answer):
@@ -260,28 +267,42 @@ class Game:
             if Normalized_HD <= 0.4:
                 str_return = "passou perto..."
 
-        self.newEvent('newAttempt', sid, {'attempt': str_return})
-        if self.roundScorers == len(self.players)-1:
-            self.triviaTimeout(data['attempt'])
+        self.newEvent('newAttempt', sid, {'attempt': str_return, 'pointsScored': pointsScored})
 
-    def triviaTimeout(self, answer):
+        if self.roundScorers == len(self.players)-1:
+            # bonus se todos acertarem
+            master['points'] += self.score/len(self.players)
+            self.cancelTimer('triviaTimeout')
+            self.startTimer(5, "triviaTimeout2")
+
+    def triviaTimeout(self):
         self.roundScorers = 0
 
         self.cancelTimer('triviaTimeout')
-
-        self.finishRound(answer)
-
-        # 
-
+        self.sio.emit('finishRound', json.dumps({'answer': self.answer}))
+        
+        self.startTimer(self.roundIsOverTime, "roundIsOverTimeout")
+    
         #passa pra tela de final de round
-        #termina round e reseta roundScorers
 
-    def finishRound(self, answer):
-        self.sio.emit('finishRound', {'answer': answer})
-        time.sleep(3)
+    def finishRound(self):
+        self.cancelTimer('roundIsOverTimeout')
         self.startRound()
 
-        pass
+    def gameOverTimeout(self):
+        allPlayers = {p['username'] : p['points'] for p in self.players}
+        
+        podiumPlayers = sorted(allPlayers.items(), key=lambda item: item[1], reverse=True)
+
+        podium = {'playerNum': len(podiumPlayers)}
+
+        for i in range(len(podiumPlayers)):
+            podium['top'+str(i+1)+'_name'] = podiumPlayers[i][0]
+            podium['top'+str(i+1)+'_points'] = podiumPlayers[i][1]
+
+
+        self.sio.emit('gameOver', json.dumps(podium), room=self.ROOM)
+        
 
     #====>> gameplay
     
@@ -324,6 +345,13 @@ class Game:
                 res['attempt'] = data['attempt']
 
                 self.sio.emit('newEvent', json.dumps(res), room=self.ROOM)
+
+                if data['attempt'] == "acertou!":
+                    self.sio.emit('newEvent', json.dumps({'type': 'rightAnswer', 'pointsScored': data['pointsScored'], 'countdown' : int(self.countdown)}), room=sid)
+
+        if type == 'gameOver':
+            self.sio.emit('newEvent', json.dumps(res), room=self.ROOM)
+
     #end newevent
 
     #pegar a info do jogador a partir do SID

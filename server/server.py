@@ -75,14 +75,22 @@ def timeout(sid, data):
     if(res['callback'] == 'chooseTopicTimeout'):
         game.chooseTopicTimeout()
 
-    if(res['callback'] == 'triviaTimeout'):
+    if(res['callback'] == 'triviaTimeout' or res['callback'] == 'triviaTimeout2'):
         game.triviaTimeout()
+
+    if(res['callback'] == 'roundIsOverTimeout'):
+        game.finishRound()
+
+    if(res['callback'] == 'gameOverTimeout'):
+        game.gameOverTimeout()
+    
     
     print("TIMEOUT #########################################")
 
 @sio.event
 def countdownUpdate(sid, data):
     game.countdown = json.loads(data)['countdown']
+
 
 # funcao main da thread countdown
 def countdown():
