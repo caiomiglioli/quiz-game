@@ -31,14 +31,14 @@ public class PagePodium {
             // for(int i=1; i <= json.getInt("playerNum") && i <= 3; i++){
             // }
             lbl_top1_name.setText(json.getString("top1_name"));
-            lbl_top1_points.setText(String.format("%.1f", json.getDouble("top1_points")));
+            lbl_top1_points.setText(String.format("%.1f pontos", json.getDouble("top1_points")));
 
             lbl_top2_name.setText(json.getString("top2_name"));
-            lbl_top2_points.setText(String.format("%.1f", json.getDouble("top2_points")));
+            lbl_top2_points.setText(String.format("%.1f pontos", json.getDouble("top2_points")));
 
             if(json.getInt("playerNum") > 2){
                 lbl_top3_name.setText(json.getString("top3_name"));
-                lbl_top3_points.setText(String.format("%.1f", json.getDouble("top3_points")));    
+                lbl_top3_points.setText(String.format("%.1f pontos", json.getDouble("top3_points")));    
             }
         });
     }

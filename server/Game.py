@@ -168,7 +168,7 @@ class Game:
                 self.startRound()
             #sim, então fim de jogo
             else:
-                self.newEvent('gameOver')
+                # self.newEvent('gameOver')
                 self.startTimer(5, "gameOverTimeout")
 
                 #fim de jogo

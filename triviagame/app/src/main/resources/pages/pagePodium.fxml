@@ -58,7 +58,7 @@
       </Label>
       <ImageView fitHeight="311.0" fitWidth="349.0" layoutX="126.0" layoutY="183.0">
          <image>
-            <Image url="@../../../../../../../../../../Downloads/podio.png" />
+            <Image url="@/img/podio.png" />
          </image>
       </ImageView>
       <Label fx:id="lbl_top1_name" alignment="BOTTOM_CENTER" layoutX="207.0" layoutY="123.0" prefHeight="60.0" prefWidth="191.0" text=" " textAlignment="CENTER">
@@ -71,12 +71,12 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="lbl_top3_name" alignment="BOTTOM_CENTER" layoutX="127.0" layoutY="289.0" prefHeight="60.0" prefWidth="115.0" text="Gasparzinho" textAlignment="CENTER">
+      <Label fx:id="lbl_top3_name" alignment="BOTTOM_CENTER" layoutX="127.0" layoutY="289.0" prefHeight="60.0" prefWidth="115.0" text=" " textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
       </Label>
-      <Label fx:id="lbl_top3_points" alignment="CENTER" layoutX="133.0" layoutY="339.0" prefHeight="36.0" prefWidth="103.0" text="0 pontos">
+      <Label fx:id="lbl_top3_points" alignment="CENTER" layoutX="133.0" layoutY="339.0" prefHeight="36.0" prefWidth="103.0" text=" ">
          <font>
             <Font size="14.0" />
          </font>
