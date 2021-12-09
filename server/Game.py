@@ -63,10 +63,35 @@ class Game:
             if(player['sid'] == sid):
                 self.players.remove(player)
                     # self.players.pop()
-        if len(self.players) < 1:
-            # self.cancelTimer()
-            pass
+
+        # reiniciar jogo
+        if len(self.players) < 2:
+            self.restartGame()
     #end removeplayers
+
+    def restartGame(self):
+        print("====================== RESTART GAME =========================")
+        print("====================== RESTART GAME =========================")
+       
+        # cancelar todos os timers
+        self.sio.emit('cancelAllCountdown', "cancel-all", sid=self.SIDTIMER)
+            
+        #remover todos os jogadores
+        self.players.clear()
+        self.currentMaster = 0
+        self.topic = self.clue = self.answer = None
+        self.roundScorers = self.cluePunishment = 0
+
+        self.countdown = 300
+        self.hasBegun = self.isRoundOver = False
+        self.currentHalf = 0
+
+        # jogar todo mundo pra tela inicial
+        res = json.dumps(self.getPlayerNames())
+        self.sio.emit('connectReply', res, room=self.ROOM)
+        # self.sio.emit('restartGame', "restart", room=self.ROOM)
+
+    #end restartgame
 
     #Adicionar players ao jogo quando clicarem no botão "Conectar" na página conect
     def addPlayer(self, sid, data):
@@ -309,6 +334,10 @@ class Game:
 
 
         self.sio.emit('gameOver', json.dumps(podium), room=self.ROOM)
+        
+        self.startTimer(30, "restartGame")
+
+        #fazer um timeout de X segundos para voltar para tela inicial
         
     def giveClueUtil(self):
         reply = [ '_' for i in range(len(self.answer))] # fazer um "_" com o mesmo numero de caracteres da resposta

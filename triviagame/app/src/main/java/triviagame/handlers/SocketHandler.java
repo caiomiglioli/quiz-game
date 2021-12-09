@@ -39,7 +39,7 @@ public class SocketHandler {
         socket.connect();
 
         //handshake
-        socket.once("connectReply", new Emitter.Listener() {
+        socket.on("connectReply", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
 
@@ -259,6 +259,18 @@ public class SocketHandler {
                 }
             }
         });
+
+        // socket.on("restartGame", new Emitter.Listener() {
+        //     @Override
+        //     public void call(Object... args) {
+        //         try {
+        //             stageHandler.changeSceneSynchronous("/pages/pageConnect.fxml");
+        //             PageConnect controller = (PageConnect)stageHandler.getSceneController();
+                
+
+        //     }
+        // });
+
         //emitir sinal de que o player está pronto'
         socket.emit("gameReady", "success");
 

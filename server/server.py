@@ -88,6 +88,8 @@ def timeout(sid, data):
     if(res['callback'] == 'gameOverTimeout'):
         game.gameOverTimeout()
     
+    if(res['callback'] == 'restartGame'):
+        game.restartGame()
     
     print("TIMEOUT #########################################")
 

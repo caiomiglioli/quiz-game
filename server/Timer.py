@@ -23,6 +23,13 @@ class Timer:
         def cancelCountdown(data):
             self.isTimerCancelled[json.loads(data)['callback']] = True
 
+        @self.sio.event
+        def cancelAllCountdown(data):
+            for timer in self.isTimerCancelled:
+                self.isTimerCancelled[timer] = True
+
+
+
     def connect(self):        
         self.sio.connect('http://localhost:5000')
         self.sio.emit('socketHandshake', "handshake")
