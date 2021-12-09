@@ -6,40 +6,59 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="396.0" prefWidth="358.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="triviagame.controllers.PageChooseTopic">
    <children>
-      <Label fx:id="lbl_sua_vez" layoutX="18.0" layoutY="14.0" text="Sua vez! Escolha o tema!">
+      <Label fx:id="lbl_sua_vez" layoutX="35.0" layoutY="14.0" text="Sua vez! Escolha o tema!">
          <font>
-            <Font size="22.0" />
+            <Font name="System Bold" size="25.0" />
          </font>
+         <textFill>
+            <LinearGradient endX="1.0" endY="1.0">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.7763158082962036" green="0.1940789520740509" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="0.5333333611488342" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
       </Label>
       <Label fx:id="lbl_dica" layoutX="16.0" layoutY="138.0" text="Dica">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <Label fx:id="lbl_resposta" layoutX="16.0" layoutY="206.0" text="Resposta">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <Label fx:id="lbl_tema" layoutX="19.0" layoutY="73.0" text="Tema">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Label>
       <Separator layoutX="18.0" layoutY="53.0" prefHeight="2.0" prefWidth="322.0" />
       <TextField fx:id="txtf_tema" layoutX="18.0" layoutY="100.0" prefHeight="25.0" prefWidth="322.0" />
       <TextField fx:id="txtf_dica" layoutX="18.0" layoutY="168.0" prefHeight="25.0" prefWidth="322.0" />
       <TextField fx:id="txtf_resposta" layoutX="18.0" layoutY="236.0" prefHeight="25.0" prefWidth="322.0" />
-      <Button fx:id="btn_start" defaultButton="true" layoutX="67.0" layoutY="286.0" mnemonicParsing="false" onAction="#startRound" prefHeight="25.0" prefWidth="224.0" text="Iniciar Rodada">
+      <Button fx:id="btn_start" defaultButton="true" layoutX="67.0" layoutY="286.0" mnemonicParsing="false" onAction="#startRound" prefHeight="25.0" prefWidth="224.0" style="-fx-background-color: linear-gradient(orange, #e94500);" text="Iniciar Rodada" textFill="WHITE">
          <font>
-            <Font size="24.0" />
+            <Font name="System Bold" size="24.0" />
          </font>
       </Button>
-      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="1" />
+      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="1" style="-fx-accent: #ff7a05;" />
       <Label fx:id="lbl_error_msg" layoutX="69.0" layoutY="277.0" prefHeight="17.0" prefWidth="224.0" text=" " />
    </children>
 </AnchorPane>

@@ -12,16 +12,16 @@
    <children>
       <Label fx:id="lbl_sua_vez" layoutX="18.0" layoutY="14.0" text="Aguardando o Tema!">
          <font>
-            <Font size="22.0" />
+            <Font name="System Bold" size="22.0" />
          </font>
       </Label>
       <Label fx:id="lbl_resposta" layoutX="43.0" layoutY="312.0" text="Aguardando o proximo Trivia...">
          <font>
-            <Font size="20.0" />
+            <Font name="System Italic" size="20.0" />
          </font>
       </Label>
       <Separator layoutX="18.0" layoutY="53.0" prefHeight="2.0" prefWidth="322.0" />
-      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="1" />
+      <ProgressBar fx:id="pgb_timer" layoutX="18.0" layoutY="364.0" prefHeight="18.0" prefWidth="322.0" progress="1" style="-fx-accent: #ff7a05;" />
       <Label fx:id="lbl_error_msg" layoutX="69.0" layoutY="277.0" prefHeight="17.0" prefWidth="224.0" text=" " />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="104.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true">
          <image>

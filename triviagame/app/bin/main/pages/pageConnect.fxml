@@ -51,19 +51,19 @@
           <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="127.0" prefWidth="288.0">
             <children>
 
-                  <Button fx:id="btn_connect" defaultButton="true" layoutX="167.0" layoutY="44.0" mnemonicParsing="false" onAction="#connectToServer" prefHeight="32.0" prefWidth="102.0" text="Conectar">
+                  <Button fx:id="btn_connect" defaultButton="true" layoutX="167.0" layoutY="44.0" mnemonicParsing="false" onAction="#connectToServer" prefHeight="32.0" prefWidth="102.0" style="-fx-background-color: linear-gradient(orange, #e94500);" text="Conectar" textFill="WHITE">
                      <font>
-                        <Font size="15.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font></Button>
                   <Label layoutX="14.0" layoutY="23.0" text="Apelido:">
                      <font>
-                        <Font size="15.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
                   <TextField fx:id="txtf_username" layoutX="14.0" layoutY="44.0" prefHeight="32.0" prefWidth="148.0" />
                   <Label fx:id="lbl_error_msg" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="81.0" prefHeight="32.0" prefWidth="249.0" text="Aguardando..." wrapText="true">
                      <font>
-                        <Font size="15.0" />
+                        <Font name="System Italic" size="15.0" />
                      </font></Label>
                   <Separator layoutX="-2.0" layoutY="118.0" prefHeight="0.0" prefWidth="288.0" />
             </children>
@@ -74,7 +74,7 @@
          <children>
             <Label layoutX="20.0" layoutY="-7.0" text="Aguardando jogadores...">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Bold Italic" size="15.0" />
                </font>
             </Label>
             <ScrollPane fx:id="scroll" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="18.0" layoutY="15.0" prefHeight="156.0" prefWidth="249.0" style="-fx-background-color: transparent;" vbarPolicy="ALWAYS" vvalue="1.0">
@@ -82,10 +82,10 @@
                   <TextFlow fx:id="txt_log" maxWidth="-Infinity" prefHeight="156.0" prefWidth="233.0" style="-fx-background-color: #fff; -fx-border-color: #bbb; -fx-border-radius: 3;" />
                </content>
             </ScrollPane>
-            <ProgressBar fx:id="pgb_timer_connect" layoutX="19.0" layoutY="177.0" prefHeight="17.0" prefWidth="249.0" progress="1" />
+            <ProgressBar fx:id="pgb_timer_connect" layoutX="19.0" layoutY="177.0" prefHeight="17.0" prefWidth="249.0" progress="1" style="-fx-accent: #ff7a05;" />
             <Label fx:id="lbl_qtde_players" layoutX="245.0" layoutY="-7.0" text="0/5" textAlignment="RIGHT">
                <font>
-                  <Font size="15.0" />
+                  <Font name="System Bold" size="15.0" />
                </font>
             </Label>
          </children>
